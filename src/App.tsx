@@ -1,27 +1,46 @@
-import MapBoard from './components/Map/MapBoard'
+import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+
+import Prologue from './scenes/Prologue/Prologue'
+import OpenedBox from './scenes/OpenedBox/OpenedBox'
+
+type Scene = 'prologue' | 'opened-box'
 
 function App() {
+  const [scene, setScene] = useState<Scene>('prologue')
+
   return (
-    <main className="min-h-screen bg-[#11100d] px-4 py-10 text-[#e8dfc8]">
-      <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center">
-        <header className="mb-8 px-2 text-center">
-          <p className="text-xs uppercase tracking-[0.4em] text-[#9c8b68]">
-            The Lost Cartographer
-          </p>
+    <div className="min-h-screen bg-[#0d0c09] text-[#e8dfc8]">
+      <AnimatePresence mode="wait">
+        {scene === 'prologue' && (
+          <motion.div
+            key="prologue"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <Prologue
+              onContinue={() => {
+                setScene('opened-box')
+              }}
+            />
+          </motion.div>
+        )}
 
-          <h1 className="mt-3 font-serif text-4xl tracking-wide md:text-5xl">
-            Map Reconstruction
-          </h1>
-
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-[#938a78]">
-            Restore a fragment of the expedition map by observing its terrain,
-            placing it correctly, and aligning the route.
-          </p>
-        </header>
-
-        <MapBoard />
-      </div>
-    </main>
+        {scene === 'opened-box' && (
+          <motion.div
+            key="opened-box"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <OpenedBox />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   )
 }
 
